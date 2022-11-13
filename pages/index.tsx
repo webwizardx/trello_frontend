@@ -1,10 +1,16 @@
-import type { NextPage } from 'next'
+import { Page } from '../src/components/Page';
 import { withSessionSsr } from '../src/features/auth';
+import { HomeLayout } from '../src/components/Layouts';
+import { NextPageWithLayout } from './_app';
 
-const Home: NextPage = () => {
-    return (
-        <h1>Dashboard</h1>
-    )
+const Home: NextPageWithLayout = () => {
+    return <Page title='Home' />
+}
+
+Home.getLayout = (page) => {
+    return <HomeLayout>
+        {page}
+    </HomeLayout>
 }
 
 export const getServerSideProps = withSessionSsr(async ({ req }) => {

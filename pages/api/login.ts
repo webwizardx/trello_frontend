@@ -1,7 +1,6 @@
-import { login } from './../../src/api/auth/index';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { AxiosError } from 'axios';
-import { withSessionRoute } from '../../src/features/auth';
+import { login, withSessionRoute } from '../../src/features/auth';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	try {
@@ -13,8 +12,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 		res.status(status).json(data);
 	} catch (error: any) {
-		const { response } = error as AxiosError;
-		res.status(response!.status).json(response!.data);
+		if (error instanceof AxiosError) {
+			const { response } = error;
+			res.status(response!.status).json(response!.data);
+		} else {
+			res.status(500).json({
+				message: 'Sorry, something went wrong in the server.',
+			});
+		}
 	}
 };
 

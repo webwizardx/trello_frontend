@@ -1,0 +1,1 @@
+export { getRequiredMessage } from './forms';
