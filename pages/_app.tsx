@@ -8,14 +8,28 @@ import {
 import type { AppProps } from 'next/app'
 import theme from '../src/theme'
 import { store } from '../src/store'
+import { Store } from 'redux'
+import { Alert } from '../src/components/Alert'
+import { ReactElement, ReactNode } from 'react'
+import { NextPage } from 'next'
 
-function MyApp({ Component, pageProps }: AppProps) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+    getLayout?: (page: ReactElement) => ReactNode
+}
+
+export type AppPropsWithLayout = AppProps & {
+    Component: NextPageWithLayout
+}
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     const queryClient = new QueryClient();
+    const getLayout = Component.getLayout ?? ((page) => page);
 
     return <ChakraProvider theme={theme}>
-        <Provider store={store}>
+        <Provider store={store as Store}>
             <QueryClientProvider client={queryClient}>
-                <Component {...pageProps} />
+                <Alert />
+                {getLayout(<Component {...pageProps} />)}
             </QueryClientProvider>
         </Provider>
     </ChakraProvider>

@@ -1,5 +1,5 @@
 import type { IronSessionOptions } from 'iron-session';
-import { User } from '../../../api/auth/interface';
+import { User } from '../services/interface';
 
 export const sessionOptions: IronSessionOptions = {
 	password: process.env.SECRET_COOKIE_PASSWORD as string,
@@ -13,7 +13,7 @@ export const sessionOptions: IronSessionOptions = {
 declare module 'iron-session' {
 	interface IronSessionData {
 		API_TOKEN?: string;
-		user?: Omit<User, 'password'>;
+		user?: User;
 	}
 }
 

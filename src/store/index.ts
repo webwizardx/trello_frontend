@@ -1,12 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { Store } from 'redux';
-import counter from './counter_slice';
+import { alert } from '../components/Alert';
 
 export const store = configureStore({
 	reducer: {
-		counter,
+		alert,
 	},
-}) as Store;
+});
+
+export const getStore = () =>
+	configureStore({
+		reducer: {
+			alert,
+		},
+	});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

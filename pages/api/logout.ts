@@ -1,7 +1,6 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { logout } from '../../src/api/auth';
-import { withSessionRoute } from '../../src/features/auth';
+import { logout, withSessionRoute } from '../../src/features/auth';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	try {
@@ -16,9 +15,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 		res.status(status).json(data);
 	} catch (error) {
-		const { response } = error as AxiosError;
 		req.session.destroy();
-		res.status(response!.status).json(response!.data);
+		if (error instanceof AxiosError) {
+			const { response } = error as AxiosError;
+			res.status(response!.status).json(response!.data);
+		} else {
+			res.status(500).json({
+				message: 'Sorry, something went wrong in the server.',
+			});
+		}
 	}
 };
 

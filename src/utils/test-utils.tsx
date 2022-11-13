@@ -7,14 +7,28 @@ import {
     QueryClientProvider,
 } from '@tanstack/react-query'
 import theme from '../theme'
-import { store } from '../store'
+import { getStore } from '../store'
+import { Store } from 'redux'
+import { Alert } from '../components/Alert'
 
 const AllTheProviders: FC<{ children: React.ReactNode }> = ({ children }) => {
-    const queryClient = new QueryClient();
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: false,
+            },
+        },
+        logger: {
+            log: console.log,
+            warn: console.warn,
+            error: () => { },
+        }
+    });
 
     return <ChakraProvider theme={theme}>
-        <Provider store={store}>
+        <Provider store={getStore() as Store}>
             <QueryClientProvider client={queryClient}>
+                <Alert />
                 {children}
             </QueryClientProvider>
         </Provider>
